@@ -20,8 +20,7 @@ function ChatBot() {
         messages: [{ role: "user", content: newMessage }],
         stream: true,
       });
-
-      addResponseMessage(completion.data.choices[0].message.content);
+      addResponseMessage(completion.choices[0].message.content);
     } catch (error) {
       console.error("Error responding to message: ", error);
       addResponseMessage("Sorry, I couldn't fetch a response. Please try again.");
