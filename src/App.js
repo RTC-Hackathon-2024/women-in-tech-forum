@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "./supabase";
 import "./style.css";
-import ChatBot from './ChatBot.js';
+import ChatBot from "./ChatBot";
 const initialFacts = [
   {
     id: 1,
@@ -54,7 +54,7 @@ function App() {
   const [facts, setFacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCategory, setCurrentCategory] = useState("all");
-  const [currentSortOption, setSortOption] = useState("");
+  const [currentSortOption, setSortOption] = useState("default");
   useEffect(
     function () {
       async function getFacts() {
@@ -68,10 +68,7 @@ function App() {
           .limit(1000);
 
         if (!error) {
-          let sortedFacts = facts;
-          if (currentSortOption!=""){
-           sortedFacts = sortFactsByUpVoteCount(facts, currentSortOption);
-          }
+          let sortedFacts = sortFactsByUpVoteCount(facts, currentSortOption);
           setFacts(sortedFacts);
         }
         else {
@@ -81,9 +78,14 @@ function App() {
       }
       getFacts();
     },
-    [currentCategory, currentSortOption]
+    [currentCategory]
   );
-
+  useEffect(() => {
+    let sortedFacts = [...facts]; // Create a copy of the original facts array
+    sortedFacts = sortFactsByUpVoteCount(sortedFacts, currentSortOption);
+    setFacts(sortedFacts);
+  }, [currentSortOption]);
+  
   return (
     <>
       <Header showForm={showForm} setShowForm={setShowForm} />
@@ -92,7 +94,7 @@ function App() {
       {showForm ? (
         <NewFactForm setFacts={setFacts} setShowForm={setShowForm} />
       ) : null}
-      <ChatBot />
+
       <main className="main">
         <CategoryFilter setCurrentCategory={setCurrentCategory} />
         {isLoading ? (
@@ -105,7 +107,7 @@ function App() {
         onChange={(e) => setSortOption(e.target.value)}
         disabled={isLoading}
        >
-        <option value="">Sort by:</option>
+        <option value="default">Sort by:</option>
         {SORTOPTIONS.map((opt) => (
           <option key={opt.name} value={opt.name}>
             {opt.emoji}
@@ -113,6 +115,8 @@ function App() {
         ))}
       </select>
       </main>
+      <ChatBot>
+      </ChatBot>
     </>
   );
 }
@@ -290,6 +294,10 @@ function FactList({ facts, setFacts }) {
 function sortFactsByUpVoteCount(facts, sortOption) {
   // sort the facts by sortOption
   switch (sortOption) {
+    case "default": {
+      facts.sort((a, b) => b.id - a.id);
+      break;
+    }
     case "votesInteresting": {
       facts.sort((a, b) => b.votesInteresting - a.votesInteresting);
       break;

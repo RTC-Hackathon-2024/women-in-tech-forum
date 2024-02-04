@@ -10,22 +10,17 @@ const openaiClient = new OpenAI({ apiKey: process.env.REACT_APP_OPENAI_API_KEY, 
 
 function ChatBot() {
   useEffect(() => {
-    // When the component mounts, display a welcome message
     addResponseMessage("Welcome to our chat! How can I help you today?");
   }, []);
 
   const handleNewUserMessage = async (newMessage) => {
     try {
-      // Initialize OpenAI with your API key from the environment variable
-      //const openaiClient = await openai.OpenAI({ apiKey: process.env.REACT_APP_OPENAI_API_KEY });
-
-      // Send a request to the OpenAI API and wait for a response
-      const completion = await openaiClient.createCompletion({
-        model: "gpt-3.5-turbo", // Or whichever model you're using
+      const completion = await openaiClient.chat.completions.create({
+        model: "gpt-3.5-turbo", 
         messages: [{ role: "user", content: newMessage }],
+        stream: true,
       });
 
-      // Add the API response as a new message in the chat
       addResponseMessage(completion.data.choices[0].message.content);
     } catch (error) {
       console.error("Error responding to message: ", error);
