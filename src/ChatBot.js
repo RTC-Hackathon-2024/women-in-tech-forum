@@ -3,9 +3,9 @@ import { Widget, addResponseMessage } from "react-chat-widget";
 //import openai from "openai"; // Import the default export from openai
 //import { Configuration, OpenAIApi } from "openai";
 import { OpenAI } from 'openai';
-
+import './chatbot.css'
 import "react-chat-widget/lib/styles.css";
-
+import { LiveChatWidget, EventHandlerPayload } from '@livechat/widget-react'
 const openaiClient = new OpenAI({ apiKey: process.env.REACT_APP_OPENAI_API_KEY, dangerouslyAllowBrowser: true});
 
 function ChatBot() {
@@ -32,7 +32,11 @@ function ChatBot() {
     <div className="ChatBot">
       <Widget
         handleNewUserMessage={handleNewUserMessage}
+        license="12345678"
         title="ChatBot"
+        emoji={true}
+        sendButtonAlt={true}
+        showCloseButton={true}
         subtitle="Ask me anything"
       />
     </div>
