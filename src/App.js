@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import supabase from "./supabase";
 import "./style.css";
-
+import ChatBot from './ChatBot.js';
 const initialFacts = [
   {
     id: 1,
@@ -54,7 +54,7 @@ function App() {
   const [facts, setFacts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCategory, setCurrentCategory] = useState("all");
-
+  const [currentSortOption, setSortOption] = useState("");
   useEffect(
     function () {
       async function getFacts() {
@@ -67,13 +67,21 @@ function App() {
           .order("text", { ascending: true })
           .limit(1000);
 
-        if (!error) setFacts(facts);
-        else alert("There was a problem getting data");
+        if (!error) {
+          let sortedFacts = facts;
+          if (currentSortOption!=""){
+           sortedFacts = sortFactsByUpVoteCount(facts, currentSortOption);
+          }
+          setFacts(sortedFacts);
+        }
+        else {
+          alert("There was a problem getting data");
+        }
         setIsLoading(false);
       }
       getFacts();
     },
-    [currentCategory]
+    [currentCategory, currentSortOption]
   );
 
   return (
@@ -84,7 +92,7 @@ function App() {
       {showForm ? (
         <NewFactForm setFacts={setFacts} setShowForm={setShowForm} />
       ) : null}
-
+      <ChatBot />
       <main className="main">
         <CategoryFilter setCurrentCategory={setCurrentCategory} />
         {isLoading ? (
@@ -92,6 +100,18 @@ function App() {
         ) : (
           <FactList facts={facts} setFacts={setFacts} />
         )}
+       <select
+        value={currentSortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+        disabled={isLoading}
+       >
+        <option value="">Sort by:</option>
+        {SORTOPTIONS.map((opt) => (
+          <option key={opt.name} value={opt.name}>
+            {opt.emoji}
+          </option>
+        ))}
+      </select>
       </main>
     </>
   );
@@ -102,22 +122,28 @@ function Loader() {
 }
 
 function Header({ showForm, setShowForm }) {
-  const appTitle = "Today I Learned";
+  const appTitle = "WIT FORUM👩🏻‍💻";
   return (
     <header className="header">
       <div className="logo">
-        <img src="logo.png" height="68" width="68" alt="Today I Learned Logo" />
+        <img src="logo.png" height="68" width="68" alt="WIT FORUM Logo" />
         <h1>{appTitle}</h1>
       </div>
       <button
         className="btn btn-large btn-open"
         onClick={() => setShowForm((show) => !show)}
       >
-        {showForm ? "Close" : "Share a fact"}
+        {showForm ? "Close" : "Share your thoughts"}
       </button>
     </header>
   );
 }
+
+const SORTOPTIONS = [
+  { emoji: "👍" , name: "votesInteresting" },
+  { emoji: "🤯" , name: "votesMindblowing"},
+  { emoji: "⛔️", name: "votesFalse"},
+];
 
 const CATEGORIES = [
   { name: "events", color: "#3b82f6" },
@@ -180,7 +206,7 @@ function NewFactForm({ setFacts, setShowForm }) {
     <form className="fact-form" onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Share a fact with the world..."
+        placeholder="Share your thoughts with the world..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         disabled={isUploading}
@@ -188,7 +214,7 @@ function NewFactForm({ setFacts, setShowForm }) {
       <span>{200 - textLength}</span>
       <input
         type="text"
-        placeholder="Trustworthy source..."
+        placeholder="Useful link..."
         value={source}
         onChange={(e) => setSource(e.target.value)}
         disabled={isUploading}
@@ -261,6 +287,28 @@ function FactList({ facts, setFacts }) {
     </section>
   );
 }
+function sortFactsByUpVoteCount(facts, sortOption) {
+  // sort the facts by sortOption
+  switch (sortOption) {
+    case "votesInteresting": {
+      facts.sort((a, b) => b.votesInteresting - a.votesInteresting);
+      break;
+    }
+    case "votesMindblowing": {
+      facts.sort((a, b) => b.votesMindblowing - a.votesMindblowing);
+      break;
+    }
+    case "votesFalse":{
+      facts.sort((a, b) => b.votesFalse - a.votesFalse);
+    }
+    default: {
+      break;
+    }
+  }
+  // Return the sorted array
+  return facts;
+}
+
 
 function Fact({ fact, setFacts }) {
   const [isUpdating, setIsUpdating] = useState(false);

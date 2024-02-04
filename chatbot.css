@@ -1,0 +1,63 @@
+/* chatbot.css */
+
+/* General chatbot container styles */
+.ChatBot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: 350px;
+  }
+  
+  /* Widget header styles */
+  .rcw-conversation-container .rcw-header {
+    background-color: #4e8cff; /* Blue header */
+    color: white;
+  }
+  
+  /* Title styles */
+  .rcw-conversation-container .rcw-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  /* Subtitle styles */
+  .rcw-conversation-container .rcw-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  /* Message text styles */
+  .rcw-messages-container .rcw-message-text {
+    color: #333; /* Dark text for better readability */
+  }
+  
+  /* User message bubble styles */
+  .rcw-messages-container .rcw-message.rcw-client {
+    background-color: #dcf8c6; /* Light green background for user messages */
+  }
+  
+  /* Bot message bubble styles */
+  .rcw-messages-container .rcw-message.rcw-response {
+    background-color: #ffffff; /* White background for bot messages */
+  }
+  
+  /* Send button styles */
+  .rcw-send-button {
+    background-color: #4e8cff; /* Blue send button */
+    color: white;
+  }
+  
+  /* Send button hover styles */
+  .rcw-send-button:hover {
+    background-color: #337acc; /* Darker blue on hover */
+  }
+  
+  /* Launcher button styles (button to open/close the chat) */
+  .rcw-launcher {
+    background-color: #4e8cff; /* Blue launcher button */
+  }
+  
+  /* Launcher button hover styles */
+  .rcw-launcher:hover {
+    background-color: #337acc; /* Darker blue on hover */
+  }
+  
