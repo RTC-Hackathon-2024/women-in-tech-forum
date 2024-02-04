@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@supabase/supabase-js": "^2.39.3",
+    "axios": "^1.6.7",
     "cra-template": "1.2.0",
     "openai": "^4.26.0",
     "opencage-api-client": "^1.0.1",
