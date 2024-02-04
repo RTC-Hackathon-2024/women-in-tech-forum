@@ -145,7 +145,7 @@ function Header({ showForm, setShowForm }) {
 
 const SORTOPTIONS = [
   { emoji: "👍" , name: "votesInteresting" },
-  { emoji: "🤯" , name: "votesMindblowing"},
+  { emoji: "❓" , name: "votesMindblowing"},
   { emoji: "⛔️", name: "votesFalse"},
 ];
 
@@ -364,7 +364,7 @@ function Fact({ fact, setFacts }) {
           onClick={() => handleVote("votesMindblowing")}
           disabled={isUpdating}
         >
-          🤯 {fact.votesMindblowing}
+          ❓ {fact.votesMindblowing}
         </button>
         <button onClick={() => handleVote("votesFalse")} disabled={isUpdating}>
           ⛔️ {fact.votesFalse}
